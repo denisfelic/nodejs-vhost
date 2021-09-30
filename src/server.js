@@ -1,7 +1,13 @@
 const express = require('express');
 const app = express();
-const app2 = express();
-const app3 = express();
+const apps = [express(), express()];
+
+const path = require('path');
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
+app.use(express.static(__dirname + '/public')); //Serves resources from public folder
+
 
 // middleware
 const vhost = (hostname, app) => (req, res, next) => {
@@ -13,19 +19,24 @@ const vhost = (hostname, app) => (req, res, next) => {
     next();
   }
 }
-//clients, apply middleware
-app.use(vhost('palmeiras.localhost', app2));
-app.use(vhost('magic.localhost', app3));
 
+
+//clients, apply middleware
+app.use(vhost('palmeiras.localhost', apps[0]));
+app.use(vhost('magic.localhost', apps[1]));
+
+apps[0].set('view engine', 'ejs');
+apps[0].set('views', path.join(__dirname, '/views'));
 // routes
-app2.get('/', (req, res) => {
-  return res.send('server2 - client palmeiras');
+apps[0].get('/', (req, res) => {
+  return res.render('institucional', { siteName: 'Palmeiras' });
 });
-app3.get('/', (req, res) => {
+apps[1].get('/', (req, res) => {
   return res.send('server3 - client magic');
 });
 
 app.get('/', (req, res) => {
+  return res.render('institucional', { siteName: 'Test' });
   return res.send(`server1  - institucional`);
 });
 
