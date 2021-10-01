@@ -20,10 +20,10 @@ const vhost = (hostname, app) => (req, res, next) => {
   }
 }
 
-
+const hostname = 'denis-dev.com'
 //clients, apply middleware
-app.use(vhost('palmeiras.localhost', apps[0]));
-app.use(vhost('magic.localhost', apps[1]));
+app.use(vhost(`palmeiras.${hostname}`, apps[0]));
+app.use(vhost(`magic.${hostname}`, apps[1]));
 
 apps[0].set('view engine', 'ejs');
 apps[0].set('views', path.join(__dirname, '/views'));
@@ -42,4 +42,4 @@ app.get('/', (req, res) => {
 
 // start server
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`server running http://localhost:${port}`));
+app.listen(port, () => console.log(`server running http://${hostname}:${port}`));
