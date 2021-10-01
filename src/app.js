@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/public')); //Serves resources from public f
 // middleware
 const vhost = (hostname, app) => (req, res, next) => {
   const host = req.headers.host.split(':')[0];
-  if (host === hostname) {
+  if (host === hostname || host === `www.${hostname}`) {
     return app(req, res, next);
   }
   else {
